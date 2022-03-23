@@ -1,0 +1,23 @@
+{
+  "name": "backend-frontend",
+  "version": "1.0.0",
+  "description": "A solution for fullstack challenge",
+  "main": "index.js",
+  "scripts": {
+    "test": "ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/munezerobagira/challenge.git"
+  },
+  "keywords": [
+    "node",
+    "react"
+  ],
+  "author": "Sostene Munezero Bagira",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/munezerobagira/challenge/issues"
+  },
+  "homepage": "https://github.com/munezerobagira/challenge#readme"
+}
