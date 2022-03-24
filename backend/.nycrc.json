@@ -2,5 +2,5 @@
   "all": true,
   "include": ["src/*/**.js"],
   "exclude": ["src/database"],
-  "reporter": ["html"]
+  "reporter": ["html", "text"]
 }
