@@ -1,10 +1,12 @@
 import express from "express";
 import routes from "./routes";
 import { port } from "./config";
-import logger from "./util/logger";
+import { Logger } from "./util";
+import { setupAppMiddlewares } from "./middlewares";
 const app = express();
+setupAppMiddlewares(app);
 app.use(routes);
 const server = app.listen(port, () => {
-  logger.info(`Server is running on port:  ${port}`);
+  Logger.info(`Server is running on port:  ${port}`);
 });
-export default server
+export default server;
