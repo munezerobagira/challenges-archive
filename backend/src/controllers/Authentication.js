@@ -12,12 +12,10 @@ class Authentication {
       return response.status(201).json({ token });
     } catch (error) {
       const { status, message, error: err } = errorFormatter(error);
-      Logger.silly(err);
+      if (status === 500) Logger.error(err);
+      else Logger.verbose(err);
       return response.status(status).json({ message });
     }
-  }
-  static async loggedIn(request, response) {
-    return response.status(200).json({ message: `You are logged in` });
   }
 }
 export default Authentication;

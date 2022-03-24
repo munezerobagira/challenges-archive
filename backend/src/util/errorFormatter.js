@@ -27,6 +27,15 @@ const errorFormatter = (error) => {
             },
           };
         }
+        if (error instanceof JsonWebTokenError) {
+          return {
+            status: 401,
+            message: "Invalid token",
+            error: {
+              stack,
+            },
+          };
+        }
         return {
           status: 400,
           message: stack,

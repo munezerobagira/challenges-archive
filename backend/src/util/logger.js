@@ -1,10 +1,6 @@
 import winston from "winston";
-const logger = winston.createLogger({
+const Logger = winston.createLogger({
   transports: [
-    new winston.transports.Console({
-      format: winston.format.simple(),
-      level: "debug",
-    }),
     new winston.transports.File({
       filename: "logs/error.log",
       level: "error",
@@ -18,14 +14,13 @@ const logger = winston.createLogger({
       filename: "logs/info.log",
       level: "info",
     }),
-    new winston.transports.File({ filename: "logs/combined.log" }),
   ],
 });
-if (process.env.NODE_ENV == "development") {
-  logger.add(
-    new winston.transports.Console({
-      format: winston.format.simple(),
-    })
-  );
-}
-export default logger;
+// if (process.env.NODE_ENV === "development") {
+//   Logger.add(
+//     new winston.transports.Console({
+//       format: winston.format.simple(),
+//     })
+//   );
+// }
+export default Logger;
