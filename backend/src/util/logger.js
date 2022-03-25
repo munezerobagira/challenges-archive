@@ -1,4 +1,5 @@
 import winston from "winston";
+
 const Logger = winston.createLogger({
   transports: [
     new winston.transports.File({
@@ -16,11 +17,12 @@ const Logger = winston.createLogger({
     }),
   ],
 });
-// if (process.env.NODE_ENV === "development") {
-//   Logger.add(
-//     new winston.transports.Console({
-//       format: winston.format.simple(),
-//     })
-//   );
-// }
+
+if (process.env.NODE_ENV === "development") {
+  Logger.add(
+    new winston.transports.Console({
+      format: winston.format.simple(),
+    })
+  );
+}
 export default Logger;

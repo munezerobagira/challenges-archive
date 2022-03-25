@@ -13,15 +13,15 @@ describe("GET /", function () {
     const response = await request(server).get("/");
     expect(response).to.have.status(404);
   });
-  describe("GET /api", function () {
-    it("should respond 200 status", async () => {
-      const response = await request(server).get("/api");
-      expect(response).to.have.status(200);
-    });
-    it("should respond with message", async () => {
-      const response = await request(server).get("/api");
-      expect(response).to.have.status(200);
-      expect(response.body).to.have.property("message");
-    });
+});
+describe("GET /api", function () {
+  it("should respond 200 status", async () => {
+    const response = await request(server).get("/api");
+    expect(response).to.have.status(200);
+  });
+  it("should respond with message", async () => {
+    const response = await request(server).get("/api");
+    expect(response).to.have.status(200);
+    expect(response.body).to.have.property("message");
   });
 });
