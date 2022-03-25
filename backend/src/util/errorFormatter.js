@@ -1,7 +1,14 @@
 import { ValidationError } from "joi";
 import { JsonWebTokenError } from "jsonwebtoken";
 
-const InternalServerError = "Sorry we have server error";
+const INTERNAL_SERVER_ERROR = "Internal server error";
+const TOKEN_ERROR = "invalid token";
+const UNSUPPORTED_IMAGE_FORMAT = "Unsupported image format";
+/**
+ *
+ * @param {*} error
+ * @
+ */
 const errorFormatter = (error) => {
   if (error.constructor) {
     const { stack } = error;
@@ -9,10 +16,9 @@ const errorFormatter = (error) => {
       case ReferenceError:
       case TypeError:
       case SyntaxError:
-      case InternalServerError:
         return {
           status: 500,
-          message: InternalServerError,
+          message: INTERNAL_SERVER_ERROR,
           error: {
             stack,
           },
@@ -30,20 +36,44 @@ const errorFormatter = (error) => {
         if (error instanceof JsonWebTokenError) {
           return {
             status: 401,
-            message: "Invalid token",
+            message: TOKEN_ERROR,
             error: {
               stack,
             },
           };
         }
+        if (error.stack.includes("Invalid input\n    at Sharp"))
+          return {
+            status: 400,
+            message: UNSUPPORTED_IMAGE_FORMAT,
+            error: {
+              stack,
+            },
+          };
+        if (
+          error.stack.includes("Input buffer contains unsupported image format")
+        )
+          return {
+            status: 400,
+            message: UNSUPPORTED_IMAGE_FORMAT,
+            error: {
+              stack,
+            },
+          };
         return {
-          status: 400,
-          message: stack,
+          status: 500,
+          message: error.name,
           error: {
             stack,
           },
         };
     }
+  } else {
+    return {
+      status: 500,
+      message: "Ask admin to check the error",
+      stack: "You designed the systems so check this error",
+    };
   }
 };
 export default errorFormatter;
