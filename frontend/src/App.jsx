@@ -1,50 +1,76 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useReducer } from "react";
 import Board from "./component/Board";
 import "./App.css";
+import boardReducer, {
+  setBoard,
+  gameInitialState,
+  incrementX,
+  decrementX,
+  incrementY,
+  decrementY,
+  setUnVisted,
+} from "./reducer/gameReducer";
 function generateBoard({ height, width }) {
-  const board = [];
-  for (let x = 1; x <= height; x++) {
-    const row = [];
-    for (let y = 1; y <= width; y++) {
-      row.push(`${x},${y}`);
+  return new Promise((resolve, reject) => {
+    const board = [];
+    const unVisited = [];
+
+    for (let y = 0; y < height; y++) {
+      const row = [];
+      for (let x = 0; x < width; x++) {
+        if (Math.random() > 0.5) {
+          row.push(1);
+          unVisited.push(y + " " + x);
+        } else {
+          row.push("");
+        }
+      }
+      board.push(row);
     }
-    board.push(row);
-  }
-  return board;
+    resolve({ board, unVisited });
+  });
 }
 function App() {
-  const [board, setBoard] = useState(null);
-  const [xActive, setXActive] = useState(0);
-  const [yActive, setYActive] = useState(0);
-  const handleKeyUp = useCallback(
-    (event) => {
-      if (event.key === "ArrowLeft") {
-        setYActive((previous) => previous - 1);
-      }
-      if (event.key === "ArrowRight") {
-        setYActive((previous) => previous + 1);
-      }
-      if (event.key === "ArrowUp") {
-        setXActive((previous) => previous - 1);
-      }
-      if (event.key === "ArrowDown") {
-        setXActive((previous) => previous + 1);
-      }
-    },
-    [active, setActive]
-  );
-  useEffect(() => {}, [active]);
+  const [gameState, dispatch] = useReducer(boardReducer, gameInitialState);
+  const handleKeyUp = useCallback((event) => {
+    event.preventDefault();
+    if (event.key === "ArrowLeft") {
+      dispatch(decrementX());
+    }
+    if (event.key === "ArrowRight") {
+      dispatch(incrementX());
+    }
+    if (event.key === "ArrowUp") {
+      dispatch(decrementY());
+    }
+    if (event.key === "ArrowDown") {
+      dispatch(incrementY());
+    }
+  }, []);
   useEffect(() => {
     window.removeEventListener("keyup", handleKeyUp);
     window.addEventListener("keyup", handleKeyUp);
-    const board = generateBoard({ height: 10, width: 10 });
-    setBoard(board);
+    const boardGenerator = async () => {
+      const { board, unVisited } = await generateBoard({
+        height: 10,
+        width: 10,
+      });
+      dispatch(setUnVisted(unVisited));
+      dispatch(setBoard(board));
+    };
+    boardGenerator();
   }, []);
 
-  if (!board) return <div>Loading...</div>;
+  if (!gameState.board || !gameState.unVisted) return <div>Loading...</div>;
+  console.log(gameState.unVisted);
   return (
     <>
-      <Board board={board} active={active} handleKeyUp={handleKeyUp} />
+      <Board
+        board={gameState.board}
+        active={{ x: gameState.x, y: gameState.y }}
+        unVisited={gameState.unVisted}
+        handleKeyUp={handleKeyUp}
+      />
     </>
   );
 }

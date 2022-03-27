@@ -7,6 +7,6 @@ table td {
   padding: 8px;
 }
 table td.active {
-  border: 1px solid #101010;
+  outline: 1px solid #101010;
   padding: 8px;
 }

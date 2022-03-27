@@ -1,10 +1,9 @@
 import { useMemo } from "react";
 import "./board.css";
 import Cell from "./Cell";
-function Board({ board, previousActive, active, handleKeyUp }) {
-  console.log(board);
-  console.log(active);
-  if (board[0][0]) {
+function Board({ board, active, unVisited, handleKeyUp }) {
+  console.log(board, unVisited);
+  if (board[0] && unVisited) {
     return (
       <table
         onKeyUp={(event) => {
@@ -18,19 +17,23 @@ function Board({ board, previousActive, active, handleKeyUp }) {
             <tr className="row" key={rowIndex}>
               {row.map((cell, cellIndex) => (
                 <Cell
-                  key={cell}
+                  key={cellIndex}
                   className={
-                    active.x === rowIndex && active.y === cellIndex
+                    active.y === rowIndex && active.x === cellIndex
                       ? "active"
                       : ""
                   }
-                />
+                >
+                  {unVisited.includes(rowIndex + " " + cellIndex) ? cell : ""}
+                </Cell>
               ))}
             </tr>
           ))}
         </tbody>
       </table>
     );
+  } else {
+    return <div>Choose the board size</div>;
   }
 }
 
