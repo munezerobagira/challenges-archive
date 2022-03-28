@@ -3,9 +3,11 @@ export const gameInitialState = {
   x: 0,
   y: 0,
   count: 0,
-  unVisted: [],
+  mushrooms: [],
   gameOn: false,
 };
+
+//  Constanst
 export const SET_BOARD = "SET_BOARD";
 export const SET_X = "SET_X";
 export const SET_Y = "SET_Y";
@@ -13,10 +15,17 @@ export const INCREMENT_X = "INCREMENT_X";
 export const DECREMENT_X = "DECREMENT_X";
 export const INCREMENT_Y = "INCREMENT_Y";
 export const DECREMENT_Y = "DECREMENT_Y";
-export const SET_UNVISITED = "SET_UNVISITED";
+export const SET_MUSHROOMS = "SET_MUSHROOMS";
+export const RESET = "RESET";
+
+// reducers
+
 function gameReducer(state = gameInitialState, action) {
-  let nextValue;
-  let nextUnivisted;
+  let nextValue,
+    updatedMushrooms,
+    gameOn = state.gameOn,
+    count = state.count;
+
   switch (action.type) {
     case SET_BOARD:
       return {
@@ -34,54 +43,71 @@ function gameReducer(state = gameInitialState, action) {
         y: action.payload,
       };
     case INCREMENT_X:
-      nextValue = state.board[0].length > state.x + 1 ? state.x + 1 : state.x;
-      nextUnivisted = state.unVisted.filter(
+      nextValue =
+        state.board[0].length > state.x + 1 ? (count++, state.x + 1) : state.x;
+      updatedMushrooms = state.mushrooms.filter(
         (item) => item !== state.y + " " + nextValue
       );
+      gameOn = updatedMushrooms.length !== 0;
       return {
         ...state,
-        unVisted: nextUnivisted,
+        mushrooms: updatedMushrooms,
+        gameOn: gameOn,
         x: nextValue,
       };
     case DECREMENT_X:
-      nextValue = state.x > 0 ? state.x - 1 : state.x;
-      nextUnivisted = state.unVisted.filter(
+      nextValue = state.x > 0 ? (count++, state.x - 1) : state.x;
+      updatedMushrooms = state.mushrooms.filter(
         (item) => item !== state.y + " " + nextValue
       );
+      gameOn = updatedMushrooms.length !== 0;
+
       return {
         ...state,
-        unVisted: nextUnivisted,
+        mushrooms: updatedMushrooms,
+        count,
+        gameOn,
         x: nextValue,
       };
     case INCREMENT_Y:
-      nextValue = state.y + 1 < state.board.length ? state.y + 1 : state.y;
-      nextUnivisted = state.unVisted.filter(
+      nextValue =
+        state.y + 1 < state.board.length ? (count++, state.y + 1) : state.y;
+      updatedMushrooms = state.mushrooms.filter(
         (item) => item !== nextValue + " " + state.x
       );
+      gameOn = updatedMushrooms.length !== 0;
       return {
         ...state,
-        unVisted: nextUnivisted,
+        mushrooms: updatedMushrooms,
+        gameOn,
         y: nextValue,
       };
     case DECREMENT_Y:
-      nextValue = state.y > 0 ? state.y - 1 : state.y;
-      nextUnivisted = state.unVisted.filter(
+      nextValue = state.y > 0 ? (count++, state.y - 1) : state.y;
+      updatedMushrooms = state.mushrooms.filter(
         (item) => item !== nextValue + " " + state.x
       );
+      gameOn = updatedMushrooms.length !== 0;
       return {
         ...state,
-        unVisted: nextUnivisted,
+        mushrooms: updatedMushrooms,
+        count,
+        gameOn,
         y: nextValue,
       };
-    case SET_UNVISITED:
+    case SET_MUSHROOMS:
       return {
         ...state,
-        unVisted: action.payload,
+        mushrooms: action.payload,
       };
+    case RESET:
+      return gameInitialState;
     default:
       return state;
   }
 }
+
+// actions
 
 export function setBoard(board) {
   return {
@@ -122,10 +148,15 @@ export function decrementY() {
   };
 }
 
-export function setUnVisted(unVisted) {
+export function setMushrooms(mushrooms) {
   return {
-    type: SET_UNVISITED,
-    payload: unVisted,
+    type: SET_MUSHROOMS,
+    payload: mushrooms,
+  };
+}
+export function reset() {
+  return {
+    type: RESET,
   };
 }
 export default gameReducer;

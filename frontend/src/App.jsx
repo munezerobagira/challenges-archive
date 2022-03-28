@@ -8,28 +8,13 @@ import boardReducer, {
   decrementX,
   incrementY,
   decrementY,
-  setUnVisted,
+  setMushrooms,
+  reset,
+  setX,
+  setY,
 } from "./reducer/gameReducer";
-function generateBoard({ height, width }) {
-  return new Promise((resolve, reject) => {
-    const board = [];
-    const unVisited = [];
+import generateBoard from "./util/generateBoard";
 
-    for (let y = 0; y < height; y++) {
-      const row = [];
-      for (let x = 0; x < width; x++) {
-        if (Math.random() > 0.5) {
-          row.push(1);
-          unVisited.push(y + " " + x);
-        } else {
-          row.push("");
-        }
-      }
-      board.push(row);
-    }
-    resolve({ board, unVisited });
-  });
-}
 function App() {
   const [gameState, dispatch] = useReducer(boardReducer, gameInitialState);
   const handleKeyUp = useCallback((event) => {
@@ -47,28 +32,47 @@ function App() {
       dispatch(incrementY());
     }
   }, []);
+  const boardGenerator = async () => {
+    dispatch(reset());
+    let height = window.prompt("Enter the height of the board");
+    let width = window.prompt("Enter the width of the board");
+    height = parseInt(height);
+    width = parseInt(width);
+    if (height && width) {
+      const { board, unVisited, startX, startY } = await generateBoard(
+        height,
+        width
+      );
+      dispatch(setMushrooms(unVisited));
+      dispatch(setBoard(board));
+      dispatch(setX(startX));
+      dispatch(setY(startY));
+    }
+  };
   useEffect(() => {
     window.removeEventListener("keyup", handleKeyUp);
     window.addEventListener("keyup", handleKeyUp);
-    const boardGenerator = async () => {
-      const { board, unVisited } = await generateBoard({
-        height: 10,
-        width: 10,
-      });
-      dispatch(setUnVisted(unVisited));
-      dispatch(setBoard(board));
-    };
-    boardGenerator();
   }, []);
 
-  if (!gameState.board || !gameState.unVisted) return <div>Loading...</div>;
-  console.log(gameState.unVisted);
+  if (!gameState.board || !gameState.mushrooms.length)
+    return (
+      <div>
+        {gameState.count > 0 ? (
+          <div>
+            {alert("Moves to catch queen " + gameState.count)}
+            <button onClick={boardGenerator}>Play again</button>
+          </div>
+        ) : (
+          <button onClick={boardGenerator}>play</button>
+        )}
+      </div>
+    );
   return (
     <>
       <Board
         board={gameState.board}
         active={{ x: gameState.x, y: gameState.y }}
-        unVisited={gameState.unVisted}
+        mushrooms={gameState.mushrooms}
         handleKeyUp={handleKeyUp}
       />
     </>

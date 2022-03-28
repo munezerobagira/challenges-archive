@@ -1,16 +1,10 @@
 import { useMemo } from "react";
 import "./board.css";
 import Cell from "./Cell";
-function Board({ board, active, unVisited, handleKeyUp }) {
-  console.log(board, unVisited);
-  if (board[0] && unVisited) {
+function Board({ board, active, mushrooms, handleKeyUp }) {
+  if (board[0] && mushrooms) {
     return (
-      <table
-        onKeyUp={(event) => {
-          console.log(event.key);
-          handleKeyUp(event);
-        }}
-      >
+      <table>
         <thead></thead>
         <tbody>
           {board.map((row, rowIndex) => (
@@ -21,11 +15,11 @@ function Board({ board, active, unVisited, handleKeyUp }) {
                   className={
                     active.y === rowIndex && active.x === cellIndex
                       ? "active"
+                      : mushrooms.includes(rowIndex + " " + cellIndex)
+                      ? "mushroom"
                       : ""
                   }
-                >
-                  {unVisited.includes(rowIndex + " " + cellIndex) ? cell : ""}
-                </Cell>
+                ></Cell>
               ))}
             </tr>
           ))}
