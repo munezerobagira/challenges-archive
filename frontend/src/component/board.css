@@ -1,0 +1,14 @@
+table {
+  border-collapse: collapse;
+}
+table td {
+  border: 1px solid rgb(167, 167, 167);
+  padding: 10px;
+  font-size: 10px;
+}
+table td.active {
+  background: url(../assets/images/mario.png) no-repeat center center/contain;
+}
+table td.mushroom {
+  background: url(../assets/images/mushroom.jpg) no-repeat center center/contain;
+}
