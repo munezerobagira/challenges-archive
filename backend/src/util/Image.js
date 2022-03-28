@@ -1,6 +1,12 @@
 import sharp from "sharp";
 import axios from "axios";
-import { createWriteStream, createReadStream, unlink } from "fs";
+import {
+  createWriteStream,
+  createReadStream,
+  unlink,
+  existsSync,
+  mkdirSync,
+} from "fs";
 import { join, basename } from "path";
 class Image {
   /**
@@ -11,6 +17,10 @@ class Image {
   static async download(url) {
     return new Promise(async (resolve, reject) => {
       try {
+        let mainFolder = join(__dirname, "../../public/images/temp");
+        if (!existsSync(mainFolder)) {
+          mkdirSync(mainFolder, { recursive: true });
+        }
         let file = join(
           __dirname,
           `../../public/images/temp/${Date.now() + basename(url).split("?")[0]}`
