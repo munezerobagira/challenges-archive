@@ -21,6 +21,7 @@ jobs:
       - run: echo 'deb [arch=amd64 signed-by=/usr/share/keyrings/cloudflare-warp-archive-keyring.gpg] https://pkg.cloudflareclient.com/ focal main' | sudo tee /etc/apt/sources.list.d/cloudflare-client.list
       - run: sudo apt update
       - run: sudo apt-get install cloudflare-warp -y
-      - run: warp-cli register -y
+      - run: warp-cli register && echo y
+    
       - run: warp-cli connect
   
