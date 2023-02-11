@@ -17,7 +17,7 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           check-latest: true
-      - run: sudo apt install cloudflare-warp -y
+      - run: sudo apt-get install cloudflare-warp -y
       - run: warp-cli register
       - run: warp-cli connect
   
