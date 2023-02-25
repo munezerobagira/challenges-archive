@@ -17,5 +17,6 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           check-latest: true
+      - run: [ -f /proc/net/if_inet6 ] && echo 'IPv6 ready system!' || echo 'No IPv6 support found! Compile the kernel!!'
       - run: curl -6 https://www.google.com
   
